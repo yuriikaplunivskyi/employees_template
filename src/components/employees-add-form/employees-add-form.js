@@ -6,7 +6,8 @@ class EmployeesAddForm extends Component {
         super(props);
         this.state = {
             name: '',
-            salary: ''
+            salary: '',
+            isError: false
         }
     }
 
@@ -18,16 +19,21 @@ class EmployeesAddForm extends Component {
 
     onSubmit = (e) => {
         e.preventDefault();
+        if (this.state.name.length < 3 || !this.state.salary) {
+          this.setState({ isError: true });
+          return;
+        }
         this.props.onAdd(this.state.name, this.state.salary);
         this.setState({
-            name: '',
-            salary: ''
-        })
-    }
+          name: "",
+          salary: "",
+          isError: false
+        });
+      };
 
     render() { 
         const {name, salary} = this.state;
-        
+
         return(
             <div className="app-add-form">
                 <h3>Add new employee</h3>
@@ -48,7 +54,9 @@ class EmployeesAddForm extends Component {
                         onChange={this.onValueChange}/>
 
                     <button type="submit"
-                            className="btn btn-outline-light">Add</button>
+                            className={`btn btn-outline-light ${
+                                this.state.isError ? "btn-danger" : ""
+                              }`}>Add</button>
                 </form>
             </div>
         )
